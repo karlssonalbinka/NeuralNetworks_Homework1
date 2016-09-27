@@ -5,14 +5,15 @@ close all
 
 %changeable parameters
 nbrTimes = 1000;
+nbrTimes = 100;
 
 %parameters
 N = [100, 200];
 P = [10 20 30 40 50 75 100 150 200];
 % N=100;
 % P = 2;
-percentWrong = zeros( length(N), length(P) );
-alpha = zeros(1, length(P));
+percentWrong = zeros(length(N), length(P) );
+alpha = zeros(length(N), length(P));
 
 for N_ITERATION = 1:length(N)
     for P_ITERATION = 1:length(P)
@@ -56,7 +57,7 @@ plot(alpha(1,:), percentWrong(1,:), '-*r');
 plot(alpha(2,:), percentWrong(2,:), '-o');
 title('One step error estimate using the Hopfield model');
 ylabel('Percent Error (%)');
-xlabel('alpha (p/N)');
-legend('Theorectical Perror', 'N=100', 'N=200', 'Location', 'northwest');
+xlabel('\alpha (p/N)');
+legend('Theoretical P_{error}', 'N=100', 'N=200', 'Location', 'northwest');
 
 
