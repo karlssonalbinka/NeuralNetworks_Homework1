@@ -107,7 +107,7 @@ for nExperiments = 1:nbrExperiments
 end
 % plot(classErr)
 
-% save('task4aResult', 'classErrMin_v', 'classErrMin_t');
+save('task4aResult', 'classErrMin_v', 'classErrMin_t');
 
 %%
 

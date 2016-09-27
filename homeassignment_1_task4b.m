@@ -46,92 +46,95 @@ vData(:,2) = (vData(:,2) - col_2_shift)/var_col2;
 
 
 %For loop parameters
-nbrIteration = 30000;
+countLimit = 1000;
+nbrIteration = 60000;
 % nbrIteration = 2*10^5;
-nbrExperiments = 2;
-nbrNeurons = 1;
+nbrExperiments = 5;
+nbrNeurons = 5;
 % nbrExperiments = 100;
 
 %test
-classErrMin_t = zeros(5,nbrExperiments);
-classErrMin_v = zeros(5,nbrExperiments);
+classErrMin_t = zeros(nbrNeurons,nbrExperiments);
+classErrMin_v = zeros(nbrNeurons,nbrExperiments);
 
 for nNeurons = 1:nbrNeurons
+    disp(['Neuron nbr - ' num2str(nNeurons)])
     
     for nExperiments = 1:nbrExperiments
-        disp(nExperiments);
+        disp([num2str(nExperiments) ' out of ' num2str(nbrExperiments) ' experiments']);
         %create random weights & thresholds
         w1 = rand(2,neurons(nNeurons) )*0.4 - 0.2;
         w2 = rand(1,neurons(nNeurons) )*0.4 - 0.2;
-        t1 = rand(2,1)*2 - 1;
+        t1 = rand(neurons(nNeurons),1)*2 - 1;
         t2 = rand(1,1)*2 - 1;
         minErr_t = 10^5;
         minErr_v = 10^5;
-        
-        for nIteration = 1:nbrIteration
+
+        nIteration = 0;
+        count = 0;
+        while ( count < countLimit && nIteration < nbrIteration )
+            nIteration = 1 + nIteration;
             
             %Random what pattern to feed the system
-            randPattern = floor(rand(1,1)* length(tData) + 1)
-            disp('1')
-            b1 = w1*tData(randPattern,1:2)' - t1
-            disp('2')
-            V = tanh(Beta*b1) %The output to the hidden layer
-            disp('3')
-            b2 = w2*V - t2
-            disp('4')
-            Output = tanh(Beta*b2) %The output to the hidden layer
+            randPattern = floor(rand(1,1)* length(tData) + 1);
+            b1 = tData(randPattern,1:2)*w1 - t1';
+            %b1 = 1x4
+            V = tanh(Beta*b1); %The output to the hidden layer
+            %V = 1x4
+            b2 = w2*V' - t2;
+            Output = tanh(Beta*b2); %The output to the hidden layer
             
-            
-            disp('5')
             delta_t2 = Beta*(tData(randPattern,3) - Output)*(1-tanh(Beta*b2)^2);
-            disp('6')
             delta_w2 = delta_t2*V;
-            disp('7')
-            delta_t1 = Beta*w2*delta_w2*(1-tanh(Beta*b1).^2);
-            disp('8')
-            delta_w1 = delta_t1*tData(randPattern,1:2);
+            delta_t1 = Beta*w2*delta_w2'*(1-tanh(Beta*b1).^2);
+            delta_w1 = tData(randPattern,1:2)'*delta_t1;
             
-            disp('9')
             w1 = w1 + lStep*delta_w1;
-            disp('10')
-            t1 = t1 - lStep*delta_t1;
-            disp('11')
-            w2 = w2 + lStep*delta_w2';
-            disp('12')
+            t1 = t1 - lStep*delta_t1';
+            w2 = w2 + lStep*delta_w2;
             t2 = t2 - lStep*delta_t2;
-            
+
             %%%%%%%%%%%%%%%%%%%%
             %-------------- test Classification Error--------------------
-            b1 = w1*tData(:,1:2)';
-            disp('20')
-            b1 = [b1(1,:)-t1(1); b1(2,:)-t1(2)];
-            disp('21')
+            b1 = tData(:,1:2)*w1;
+            for i = 1:300
+                b1(i,:) = b1(i,:)-t1';
+            end
             V = tanh(Beta*b1); %The output to the hidden layer
-            disp('22')
-            b2 = w2*V - t2;
-            disp('23')
+            b2 = V*w2' - t2;
             Output = tanh(Beta*b2); %The output to the hidden layer
-            disp('24')
             % CONTROLLERA 
 %             classErr(nIteration) = sum(abs(tData(:,3) - sign(tanh(Beta*(tData(:,1:2)*w' - t))) ))/(2*length(tData));
-            tmp = sum(abs(tData(:,3) - sign( tanh(Beta*b2) )))/(2*length(tData));
+            tmp = sum(abs(tData(:,3) - sign( Output )))/(2*length(tData));
             if (tmp < minErr_t)
                 minErr_t = tmp;
             end
-            tmp = sum(abs(vData(:,3) - sign(tanh(Beta*(vData(:,1:2)*w' - t))) ))/(2*length(vData));
+            b1 = vData(:,1:2)*w1;
+            for i = 1:100
+                b1(i,:) = b1(i,:)-t1';
+            end
+            
+            V = tanh(Beta*b1); %The output to the hidden layer
+            b2 = V*w2' - t2;
+            Output = tanh(Beta*b2); %The output to the hidden layer
+            tmp = sum(abs(vData(:,3) - sign( Output )))/(2*length(vData));
             if (tmp < minErr_v)
                 minErr_v = tmp;
+                count = 0;
+            else
+                count = count + 1;
             end
             
             
         end
-        classErrMin_t(nExperiments) = minErr_t; %minimum classErr in training
-        classErrMin_v(nExperiments) = minErr_v; %minimum classErr in validation
+        nIteration
+        classErrMin_t(nNeurons, nExperiments) = minErr_t; %minimum classErr in training
+        classErrMin_v(nNeurons, nExperiments) = minErr_v; %minimum classErr in validation
     end
 end
 % plot(classErr)
 
-save('task4aResult', 'classErrMin_v', 'classErrMin_t');
+save('task4bResult', 'classErrMin_v', 'classErrMin_t');
 
 %%
 % clear all

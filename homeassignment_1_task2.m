@@ -25,7 +25,7 @@ tmp = {zero, one, two, three, four};
 %parameters
 nbrRepeat = 100;
 nbrP = 5;       % number of patterns
-maxGen = 5;    % the maximum number of generations
+maxGen = 10;    % the maximum number of generations
 switchedBits = 120;  %maximum number of switched bits
 [rows, cols] = size(zero);  %dimension of our figures
 N = rows*cols;  %nbr of bits
@@ -52,51 +52,49 @@ for PATTERN_NBR = 1:nbrP
     for nbrSwitchedBits=1:switchedBits
         %         disp(strcat('   - ',  num2str(nbrSwitchedBits)) );
         
-        for k = 1:nbrRepeat
-            %get distorted patterns
-            switchBit = floor(rand(nbrRepeat,nbrSwitchedBits)*N) + 1;  %OBS it might switch the same twice. Fix later
-            for i=1:nbrRepeat
-                tmp = pattern(PATTERN_NBR,:);
-                tmp(switchBit(i,:)) = tmp( switchBit(i,:) )*(-1);
-                distP(i, :) = tmp;
-                %diffPix = N - sum(sum(distP(i,:) == pattern(PATTERN_NBR,:)),2)
-            end
-            
+        
+        %get distorted patterns
+        
+        %switchBit = floor(rand(nbrRepeat,nbrSwitchedBits)*N) + 1;  %OBS it might switch the same twice. Fix later
+        for k=1:nbrRepeat
+            switchedBit = randsample(N,nbrSwitchedBits);
+            distP = pattern(PATTERN_NBR,:);
+            distP(switchedBit) = distP(switchedBit) * (-1);
             % Draw distorted pattern before change
-%             figure = zeros(rows, cols);
-%             for i=1:rows
-%                 index = (i-1)*cols;
-%                 figure(i,:) = distP( k, index+1:index+cols);
-%             end
-%             figure = figure == 1;   %remake the figure to 0, 1 values
-%             image(figure, 'CDataMapping','scaled');
-%             drawnow
-%             pause(1);
+            %             figure = zeros(rows, cols);
+            %             for i=1:rows
+            %                 index = (i-1)*cols;
+            %                 figure(i,:) = distP( k, index+1:index+cols);
+            %             end
+            %             figure = figure == 1;   %remake the figure to 0, 1 values
+            %             image(figure, 'CDataMapping','scaled');
+            %             drawnow
+            %             pause(1);
             
             for j = 1:maxGen;
                 sequence = randperm(N);
                 for i = 1:N
-                    tmp = w(sequence(i),:)*distP(k,:)';
+                    tmp = w(sequence(i),:)*distP';
                     if ( tmp ~= 0 )
-                        distP(k,sequence(i)) = sign(tmp);
+                        distP(sequence(i)) = sign(tmp);
                     else
-                        distP(k,sequence(i)) = 1;
+                        distP(sequence(i)) = 1;
                     end
                 end
                 
                 
                 % Remake figure for understanding
-%                 figure = zeros(rows, cols);
-%                 for i=1:rows
-%                     index = (i-1)*cols;
-%                     figure(i,:) = distP( k, index+1:index+cols);
-%                 end
-%                 figure = figure == 1;   %remake the figure to 0, 1 values
-%                 image(figure, 'CDataMapping','scaled');
-%                 drawnow
-%                 pause(.15);
+                %                 figure = zeros(rows, cols);
+                %                 for i=1:rows
+                %                     index = (i-1)*cols;
+                %                     figure(i,:) = distP( k, index+1:index+cols);
+                %                 end
+                %                 figure = figure == 1;   %remake the figure to 0, 1 values
+                %                 image(figure, 'CDataMapping','scaled');
+                %                 drawnow
+                %                 pause(.15);
             end
-            missmatchedPixels = N - sum(sum(distP(k,:) == pattern(PATTERN_NBR,:)),2);
+            missmatchedPixels = N - sum(distP == pattern(PATTERN_NBR,:));
             if ( missmatchedPixels == 0 )
                 percent(PATTERN_NBR, nbrSwitchedBits) = percent(PATTERN_NBR, nbrSwitchedBits)+ 1;
             end
@@ -111,3 +109,4 @@ legend('Zero', 'One', 'Two', 'Three', 'Four');
 xlabel('Number flipped bits');
 ylabel('Percent of correct matches (%)');
 %did_it_work = sum(sum(distP == pattern(1,:)),2)
+
