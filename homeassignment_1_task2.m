@@ -104,9 +104,9 @@ for PATTERN_NBR = 1:nbrP
 end
 
 percent = percent/nbrRepeat;
-plot(percent');
+plot([1:120]/160, percent');
 legend('Zero', 'One', 'Two', 'Three', 'Four');
-xlabel('Number flipped bits');
+xlabel('q (percent of flipped bits)');
 ylabel('Percent of correct matches (%)');
 %did_it_work = sum(sum(distP == pattern(1,:)),2)
 
