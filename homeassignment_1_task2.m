@@ -23,10 +23,10 @@ four = im2bw(four);
 tmp = {zero, one, two, three, four};
 
 %parameters
-nbrRepeat = 100;
+nbrRepeat = 1000;
 nbrP = 5;       % number of patterns
 maxGen = 10;    % the maximum number of generations
-switchedBits = 120;  %maximum number of switched bits
+switchedBits = 100;  %maximum number of switched bits
 [rows, cols] = size(zero);  %dimension of our figures
 N = rows*cols;  %nbr of bits
 percent = zeros(nbrP,switchedBits); %the stored percentages
@@ -113,9 +113,10 @@ ylabel('Percent of correct matches (%)');
 %% Load result
 clear all
 clc
-load task2result.mat
+%load task2result.mat
+load ha1_t2_percent.mat
 
-plot([1:120]/160, percent')
+plot([1:100]/160, percent')
 legend('Zero', 'One', 'Two', 'Three', 'Four');
 xlabel('q (percent of flipped bits)');
 ylabel('Percent of correct matches (%)');
