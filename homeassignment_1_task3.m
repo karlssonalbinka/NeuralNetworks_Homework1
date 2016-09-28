@@ -9,7 +9,7 @@ nbrTimes = 100;
 nbrGenerations = 200;
 N = 500;
 B = 2;
-P = [10 20 30 40 50 75 100 150 200 300 400 500];
+P = [2 5 10 15 20 25 30 40 50 75 100 150 200 300 400 500];
 % P=20; %test
 order = zeros(1, length(P));
 g = @(b) 1/(exp(-2*B*b) + 1);   % Probability function
@@ -20,6 +20,7 @@ alpha = zeros(length(N), length(P));
 for N_ITERATION = 1:length(N) %will be 1:1 in task 3 a)
     nbrBits = N( N_ITERATION);
     for P_ITERATION = 1:length(P)
+        disp([N_ITERATION, P_ITERATION])
         nbrPatterns = P( P_ITERATION );
         
 %         totBits = nbrBits*nbrPatterns;
@@ -102,16 +103,17 @@ close all
 
 
 %changeable parameters
-nbrTimes = 100;
+nbrTimes = 1000;
 nbrGenerations = 200;
 N = [50 100 250];
 B = 2;
 
 %Get same alpha as before
-oldP = [10 20 30 40 50 75 100 150 200 300 400 500];
+oldP = [2 5 10 15 20 25 30 40 50 75 100 150 200 300 400 500];
 percent=oldP/500;
 P = [percent*N(1); percent*N(2); percent*N(3)];
 P = round(P);
+P(P == 0) = 1;
 
 %parameters
 % P=20; %test
@@ -120,11 +122,11 @@ alpha = zeros(length(N), length(P));
 order = zeros(length(N), length(P));
 g = @(b) 1/(exp(-2*B*b) + 1);   % Probability function
 
-
 for N_ITERATION = 1:length(N)
     disp(['N = ' num2str(N(N_ITERATION) )])
     nbrBits = N( N_ITERATION);
     for P_ITERATION = 1:length(P)
+        disp(['P = ' num2str(P(P_ITERATION) )])
         nbrPatterns = P(N_ITERATION, P_ITERATION );
         
         alpha(N_ITERATION, P_ITERATION) = nbrPatterns/nbrBits;
@@ -133,7 +135,7 @@ for N_ITERATION = 1:length(N)
         if nbrRepeat < 1    % if nbrPatters is > 2*nbrTimes
             nbrRepeat = 1;
         end
-        for REPEAT_ITERATION = 1: nbrRepeat 
+        for REPEAT_ITERATION = 1:nbrRepeat 
             
             %Create random patterns:
             patterns = sign( round( rand(P(N_ITERATION, P_ITERATION ), N( N_ITERATION) )) - 0.1 );
@@ -200,15 +202,16 @@ ylabel('order parameter');
 %% Load and plot the saved result from previous section
 clc
 clear all
+clf
 t1 = load('orderAndAlpha_task3a.mat');
 t2 = load ('orderAndAlpha_task3b.mat');
 order = [t2.order; t1.order];
 alpha = [t2.alpha; t1.alpha];
 
 hold on
-plot(alpha(1,:)', order(1,:)', '-');
-plot(alpha(2,:)', order(2,:)', ':g');
-plot(alpha(3,:)', order(3,:)', '*k');
+plot(alpha(1,:)', order(1,:)', '-ob');
+plot(alpha(2,:)', order(2,:)', ':*m');
+plot(alpha(3,:)', order(3,:)', '--ok');
 plot(alpha(4,:)', order(4,:)', '-*r');
 
 legend('N = 50', 'N = 100', 'N = 250', 'N = 500'); %doesn't work.

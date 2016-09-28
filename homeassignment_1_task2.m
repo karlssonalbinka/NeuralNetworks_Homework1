@@ -113,9 +113,10 @@ ylabel('Percent of correct matches (%)');
 %% Load result
 clear all
 clc
-load task2result.mat
+%load task2result.mat
+load ha1_t2_percent.mat
 
-plot([1:120]/160, percent')
+plot([1:100]/160, percent')
 legend('Zero', 'One', 'Two', 'Three', 'Four');
 xlabel('q (percent of flipped bits)');
 ylabel('Percent of correct matches (%)');
