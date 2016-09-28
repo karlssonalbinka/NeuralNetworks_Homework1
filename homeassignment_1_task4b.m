@@ -46,10 +46,10 @@ vData(:,2) = (vData(:,2) - col_2_shift)/var_col2;
 
 
 %For loop parameters
-countLimit = 1000;
-nbrIteration = 60000;
-% nbrIteration = 2*10^5;
-nbrExperiments = 5;
+countLimit = 5000;
+% nbrIteration = 60000;
+nbrIteration = 2*10^5;
+nbrExperiments = 100;
 nbrNeurons = 5;
 % nbrExperiments = 100;
 
@@ -134,15 +134,14 @@ for nNeurons = 1:nbrNeurons
 end
 % plot(classErr)
 
-save('task4bResult', 'classErrMin_v', 'classErrMin_t');
+% save('task4bResult', 'classErrMin_v', 'classErrMin_t');
 
-%%
-% clear all
-% clc
-% neurons = [2 4 8 16 32];
-% for i = 1:2
-%     nbr = 2+neurons(i)+1;
-%     w = rand(nbr,nbr )*0.4 - 0.2;
-%     w = triu(w,1);
-%     w(1:2,
-% end
+%% Plot graph of minimum Classification error over number of neurons
+clear all
+clc
+
+task4a = load('task4aResult.mat');
+task4b = load('task4bResult.mat');
+% calssError_t = [
+% mean_t = mean(classErrMin_t)
+% mean_v = mean(classErrMin_v)

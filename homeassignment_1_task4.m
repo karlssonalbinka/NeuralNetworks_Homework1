@@ -110,7 +110,8 @@ end
 save('task4aResult', 'classErrMin_v', 'classErrMin_t');
 
 %%
-
+clc
+clear all
 load task4aResult.mat
 
 mean_t = mean(classErrMin_t)
