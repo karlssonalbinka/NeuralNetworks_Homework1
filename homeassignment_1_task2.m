@@ -110,3 +110,13 @@ xlabel('Number flipped bits');
 ylabel('Percent of correct matches (%)');
 %did_it_work = sum(sum(distP == pattern(1,:)),2)
 
+%% Load result
+clear all
+clc
+load task2result.mat
+
+plot([1:120]/160, percent')
+legend('Zero', 'One', 'Two', 'Three', 'Four');
+xlabel('q (percent of flipped bits)');
+ylabel('Percent of correct matches (%)');
+
