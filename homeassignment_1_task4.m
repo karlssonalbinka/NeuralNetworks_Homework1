@@ -1,23 +1,4 @@
 %homeassignment_1_task4
-%Home assignment 1
-%Task 4
-
-%steps
-%import training & validation data
-% - normalize to zero mean and unit varianse (for both sets?!?)
-%initialize weights randomly uniformly on [-0.2, 0.2]
-%initialize thresholds randomly in [-1, 1]
-
-% Make 100 independent training experiments,
-% each with 2*10^5 iterations (one iteration corresponds to feeding a randomly
-% chosen pattern and updating weights and thresholds). For each training ex-
-% periment determine the minimum classification error for the training and the
-% classification sets. Average these errors over the independent training exper-
-% iments
-
-% Train network with no hidden layers
-% - assyncronous updating
-
 
 clc
 clear all
@@ -45,9 +26,7 @@ vData(:,2) = (vData(:,2) - col_2_shift)/var_col2;
 
 
 %For loop parameters
-% nbrIteration = 60000;
 nbrIteration = 2*10^5;
-% nbrExperiments = 2;
 nbrExperiments = 100;
 
 %test
@@ -76,12 +55,11 @@ for nExperiments = 1:nbrExperiments
         delta_t = Beta*(tData(randPattern,3) - Output)*(1-tanh(Beta*b)^2);
         delta_w = delta_t*tData(randPattern,1:2);
         
+        %update wights and biases
         w = w + lStep*delta_w;
         t = t - lStep*delta_t;
         
-        %%%%%%%%%%%%%%%%%%%%
-        %-------------- test Classification Error--------------------
-%         classErr(nIteration) = sum(abs(tData(:,3) - sign(tanh(Beta*(tData(:,1:2)*w' - t))) ))/(2*length(tData));
+        % check and save if new minimum classification error is found
         tmp = sum(abs(tData(:,3) - sign(tanh(Beta*(tData(:,1:2)*w' - t))) ))/(2*length(tData));
         if (tmp < minErr_t)
             minErr_t = tmp;
@@ -90,22 +68,10 @@ for nExperiments = 1:nbrExperiments
         if (tmp < minErr_v)
             minErr_v = tmp;
         end
-        
-        
-%         tmp = 0;
-%         for i = 1:length(tData)
-%             b = w*tData(i,1:2)' - t;  % is this right with t (theta)?
-%             o = tanh(Beta*b);
-%             tmp = tmp + abs(tData(i,3)-sign(o));
-%         end
-%         classErr(nIteration) = tmp/(2*length(tData));
-        %%%%%%%%%%%%%%%%%%%%
-        
     end
     classErrMin_t(nExperiments) = minErr_t; %minimum classErr in training
     classErrMin_v(nExperiments) = minErr_v; %minimum classErr in validation
 end
-% plot(classErr)
 
 save('task4aResult', 'classErrMin_v', 'classErrMin_t');
 

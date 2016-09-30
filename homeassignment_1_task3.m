@@ -10,12 +10,10 @@ nbrGenerations = 200;
 N = 500;
 B = 2;
 P = [2 5 10 15 20 25 30 40 50 75 100 150 200 300 400 500];
-% P=20; %test
-order = zeros(1, length(P));
 g = @(b) 1/(exp(-2*B*b) + 1);   % Probability function
 
-%parameters
 alpha = zeros(length(N), length(P));
+order = zeros(1, length(P));
 
 for N_ITERATION = 1:length(N) %will be 1:1 in task 3 a)
     nbrBits = N( N_ITERATION);
@@ -23,7 +21,6 @@ for N_ITERATION = 1:length(N) %will be 1:1 in task 3 a)
         disp([N_ITERATION, P_ITERATION])
         nbrPatterns = P( P_ITERATION );
         
-%         totBits = nbrBits*nbrPatterns;
         alpha(N_ITERATION, P_ITERATION) = nbrPatterns/nbrBits;
 
         nbrRepeat = round(nbrTimes/nbrPatterns); %To get a mean out of nbrTimes times (because the number of Patterns change that we take mean of
@@ -61,13 +58,13 @@ for N_ITERATION = 1:length(N) %will be 1:1 in task 3 a)
                     end
                 end
                 
-                if(i > 150) %make a better statement later
+                if(i > nbrGenerations-50)
                     %Store order parameter for each generation
                     tmp = 0;
                     for j = 1:nbrPatterns
                         tmp = tmp + updatedPattern(j,:)*patterns(j,:)';
                     end
-                    m(i-150) = tmp/(nbrPatterns*nbrBits);
+                    m(i-(nbrGenerations-50)) = tmp/(nbrPatterns*nbrBits);
                 end
 %                 m(i) = tmp/(nbrPatterns*nbrBits);
                 
@@ -114,9 +111,6 @@ percent=oldP/500;
 P = [percent*N(1); percent*N(2); percent*N(3)];
 P = round(P);
 P(P == 0) = 1;
-
-%parameters
-% P=20; %test
 
 alpha = zeros(length(N), length(P));
 order = zeros(length(N), length(P));
@@ -165,16 +159,14 @@ for N_ITERATION = 1:length(N)
                     end
                 end
                 
-                if(i > 150) %make a better statement later
+                if(i > nbrGenerations-50) %make a better statement later
                     %Store order parameter for each generation
                     tmp = 0;
                     for j = 1:nbrPatterns
                         tmp = tmp + updatedPattern(j,:)*patterns(j,:)';
                     end
-                    m(i-150) = tmp/(nbrPatterns*nbrBits);
+                    m(i-(nbrGenerations-50)) = tmp/(nbrPatterns*nbrBits);
                 end
-%                 m(i) = tmp/(nbrPatterns*nbrBits);
-                
             end %nbrGenerations
             
             order(N_ITERATION, P_ITERATION) = order(N_ITERATION, P_ITERATION) + mean(m);
@@ -183,7 +175,7 @@ for N_ITERATION = 1:length(N)
     end %P_ITERATION
 end %N_ITERATION
 
-save('orderAndAlpha_task3b.mat', 'alpha', 'order');
+% save('orderAndAlpha_task3b.mat', 'alpha', 'order');
 
 hold on
 plot(alpha', order');
@@ -199,7 +191,6 @@ xlabel('\alpha');
 ylabel('order parameter');
 
 %% Load and plot everything in same
-%% Load and plot the saved result from previous section
 clc
 clear all
 clf

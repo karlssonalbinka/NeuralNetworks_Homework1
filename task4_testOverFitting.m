@@ -37,7 +37,7 @@ classErrMin_t = zeros(length(neurons),nbrExperiments,nbrIteration);
 classErrMin_v = zeros(length(neurons),nbrExperiments,nbrIteration);
 
 %temporary test parameter
-neurons = 16;
+neurons = 32;
 nbrExperiments = 1;
 countLimit = 2*10^5;
 classError = zeros(2, nbrIteration);
@@ -123,4 +123,9 @@ for nNeurons = 1:length(neurons)
 %         classErrMin_v(nNeurons, nExperiments) = minErr_v; %minimum classErr in validation
     end
 end
+
+%%
 plot(classError')
+legend('traiing set', 'validation set');
+xlabel('iteratins');
+ylabel('classification error');

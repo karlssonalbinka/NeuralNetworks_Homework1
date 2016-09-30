@@ -2,11 +2,6 @@ clc
 clear all;
 colormap gray
 
-% zero = imread('zero.jpg');
-% one = imread('one.jpg');
-% two = imread('two.jpg');
-% three = imread('three.jpg');
-% four = imread('four.jpg');
 zero = imread('0.gif');
 one = imread('1.gif');
 two = imread('2.gif');
@@ -49,15 +44,11 @@ w = pattern'*pattern/N;
 
 for PATTERN_NBR = 1:nbrP
     PATTERN_NBR
-    for nbrSwitchedBits=1:switchedBits
-        %         disp(strcat('   - ',  num2str(nbrSwitchedBits)) );
+    for nbrSwitchedBits=1:switchedBits        
         
-        
-        %get distorted patterns
-        
-        %switchBit = floor(rand(nbrRepeat,nbrSwitchedBits)*N) + 1;  %OBS it might switch the same twice. Fix later
         for k=1:nbrRepeat
-            switchedBit = randsample(N,nbrSwitchedBits);
+            %get distorted patterns
+            switchedBit = randsample(N,nbrSwitchedBits); %random what bits to switch
             distP = pattern(PATTERN_NBR,:);
             distP(switchedBit) = distP(switchedBit) * (-1);
             % Draw distorted pattern before change

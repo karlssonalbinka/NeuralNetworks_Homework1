@@ -1,24 +1,5 @@
 %homeassignment_1_task4
-%Home assignment 1
 %Task 4 b
-
-%steps
-%import training & validation data
-% - normalize to zero mean and unit varianse (for both sets?!?)
-%initialize weights randomly uniformly on [-0.2, 0.2]
-%initialize thresholds randomly in [-1, 1]
-
-% Make 100 independent training experiments,
-% each with 2*10^5 iterations (one iteration corresponds to feeding a randomly
-% chosen pattern and updating weights and thresholds). For each training ex-
-% periment determine the minimum classification error for the training and the
-% classification sets. Average these errors over the independent training exper-
-% iments
-
-% Train network with no hidden layers
-% - assyncronous updating
-
-
 clc
 clear all
 
@@ -46,11 +27,9 @@ vData(:,2) = (vData(:,2) - col_2_shift)/var_col2;
 
 
 %For loop parameters
-countLimit = 5000;
-% nbrIteration = 60000;
+countLimit = 5000;  % nbr iterations to wait with killing system if no min class Error is updated
 nbrIteration = 2*10^5;
 nbrExperiments = 100;
-% nbrExperiments = 100;
 
 %test
 classErrMin_t = zeros(length(neurons),nbrExperiments,nbrIteration);
@@ -77,9 +56,9 @@ for nNeurons = 1:length(neurons)
             %Random what pattern to feed the system
             randPattern = floor(rand(1,1)* length(tData) + 1);
             b1 = tData(randPattern,1:2)*w1 - t1';
-            %b1 = 1x4
+
             V = tanh(Beta*b1); %The output to the hidden layer
-            %V = 1x4
+
             b2 = w2*V' - t2;
             Output = tanh(Beta*b2); %The output to the hidden layer
             
@@ -93,8 +72,8 @@ for nNeurons = 1:length(neurons)
             w2 = w2 + lStep*delta_w2;
             t2 = t2 - lStep*delta_t2;
 
-            %%%%%%%%%%%%%%%%%%%%
-            %-------------- test Classification Error--------------------
+            %--------------Classification Error--------------------
+            %Training data-----------------------
             b1 = tData(:,1:2)*w1;
             for i = 1:300
                 b1(i,:) = b1(i,:)-t1';
@@ -102,14 +81,12 @@ for nNeurons = 1:length(neurons)
             V = tanh(Beta*b1); %The output to the hidden layer
             b2 = V*w2' - t2;
             Output = tanh(Beta*b2); %The output to the hidden layer
-            % CONTROLLERA 
-%             classErr(nIteration) = sum(abs(tData(:,3) - sign(tanh(Beta*(tData(:,1:2)*w' - t))) ))/(2*length(tData));
             tmp = sum(abs(tData(:,3) - sign( Output )))/(2*length(tData));
             if (tmp < minErr_t)
                 minErr_t = tmp;
             end
             
-            
+            %validation data -------------------
             b1 = vData(:,1:2)*w1;
             for i = 1:100
                 b1(i,:) = b1(i,:)-t1';
@@ -132,16 +109,6 @@ for nNeurons = 1:length(neurons)
         classErrMin_v(nNeurons, nExperiments) = minErr_v; %minimum classErr in validation
     end
 end
-% plot(classErr)
 
 % save('task4bResult', 'classErrMin_v', 'classErrMin_t');
 
-%% Plot graph of minimum Classification error over number of neurons
-clear all
-clc
-
-task4a = load('task4aResult.mat');
-task4b = load('task4bResult.mat');
-% calssError_t = [
-% mean_t = mean(classErrMin_t)
-% mean_v = mean(classErrMin_v)
