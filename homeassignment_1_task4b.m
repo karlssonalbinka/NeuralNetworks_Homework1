@@ -50,14 +50,13 @@ countLimit = 5000;
 % nbrIteration = 60000;
 nbrIteration = 2*10^5;
 nbrExperiments = 100;
-nbrNeurons = 5;
 % nbrExperiments = 100;
 
 %test
-classErrMin_t = zeros(nbrNeurons,nbrExperiments);
-classErrMin_v = zeros(nbrNeurons,nbrExperiments);
+classErrMin_t = zeros(length(neurons),nbrExperiments,nbrIteration);
+classErrMin_v = zeros(length(neurons),nbrExperiments,nbrIteration);
 
-for nNeurons = 1:nbrNeurons
+for nNeurons = 1:length(neurons)
     disp(['Neuron nbr - ' num2str(nNeurons)])
     
     for nExperiments = 1:nbrExperiments
@@ -109,11 +108,12 @@ for nNeurons = 1:nbrNeurons
             if (tmp < minErr_t)
                 minErr_t = tmp;
             end
+            
+            
             b1 = vData(:,1:2)*w1;
             for i = 1:100
                 b1(i,:) = b1(i,:)-t1';
             end
-            
             V = tanh(Beta*b1); %The output to the hidden layer
             b2 = V*w2' - t2;
             Output = tanh(Beta*b2); %The output to the hidden layer
